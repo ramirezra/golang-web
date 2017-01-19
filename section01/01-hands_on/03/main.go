@@ -1,44 +1,46 @@
 package main
 
-type Person struct {
-	Firstname string
-	Lastname  string
+import "fmt"
+
+type person struct {
+	firstname string
+	lastname  string
 }
 
-type SecretAgent struct {
-	Person
-	LicenseToKill bool
+type secretAgent struct {
+	person
+	licenseToKill bool
+}
+
+func (p person) speak() {
+	fmt.Printf("Hello %s, you have a package.\n", p.firstname)
+}
+
+func (sa secretAgent) speak() {
+	fmt.Printf("Hello %s, you have a new mission.\n", sa.firstname)
 }
 
 type human interface {
-	speak() string
-}
-
-func (p Person) speak() string {
-	return p.Firstname
-}
-
-func (sa SecretAgent) speak() string {
-	return sa.Person.Firstname
+	speak()
 }
 
 func main() {
-	p1 := Person{
+	p1 := person{
 		"Robinson",
 		"Ramirez",
 	}
 
-	s2 := SecretAgent{
-		Person{
+	s2 := secretAgent{
+		person{
 			"James",
 			"Bond",
 		},
 		true,
 	}
-	says(p1)
-	says(s2)
+	saysomething(p1)
+	saysomething(s2)
 }
 
-func says(h human) {
+func saysomething(h human) {
 	h.speak()
 }
