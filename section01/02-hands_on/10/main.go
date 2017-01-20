@@ -1,7 +1,3 @@
-// Give a method to both the “truck” and “sedan” types with the following signature
-// 	transportationDevice() string
-// Have each func return a string saying what they do. Create a value of type truck and populate the fields. Create a value of type sedan and populate the fields. Call the method for each value.
-
 package main
 
 import "fmt"
@@ -22,7 +18,7 @@ type sedan struct {
 }
 
 type transportation interface {
-	transportationDevice()
+	transportationDevice() string
 }
 
 func main() {
@@ -45,6 +41,6 @@ func (s sedan) transportationDevice() string {
 	return fmt.Sprintln("This is a nice luxury car.")
 }
 
-func report(v transportation) {
-	v.transportationDevice()
+func report(v transportation) string {
+	return v.transportationDevice()
 }
