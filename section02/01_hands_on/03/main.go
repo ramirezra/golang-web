@@ -3,34 +3,134 @@
 
 package main
 
-import "fmt"
+import (
+	"log"
+	"os"
+	"text/template"
+)
 
-type food struct {
-	FoodName string
-	Price    string
+type item struct {
+	ItemName, Price string
 }
-
-type foods []food
 
 type meal struct {
-	foods
-	Meal string
+	MealType string
+	Items    []item
 }
-
-type meals []meal
 
 type restaurant struct {
 	ResName string
-	meals
+	Meal    []meal
+}
+
+type restaurants struct {
+	Restaurants []restaurant
+}
+
+var tpl *template.Template
+
+func init() {
+	tpl = template.Must(template.ParseFiles("tpl.gohtml"))
 }
 
 func main() {
-	n := restaurant{
-		ResName: "Hoosiers",
-		meals: []meal{
-			Meal: "Breakfast",
+
+	restaurants := []restaurant{
+		restaurant{
+			"Beni Hana",
+			[]meal{
+				meal{
+					MealType: "Lunch",
+					Items: []item{
+						item{"Egg Roll", "$4.95"},
+						item{"Udon Noodles", "$7.95"},
+					},
+				},
+				meal{
+					MealType: "Dinner",
+					Items: []item{
+						item{"Sushi", "$18.95"},
+						item{"Edamame", "$12.95"},
+					},
+				},
+			},
+		},
+		restaurant{
+			"International Pancake House",
+			[]meal{
+				meal{
+					MealType: "Breakfast",
+					Items: []item{
+						item{"Silver Dollar Pancakes", "$4.95"},
+						item{"Wester Omelet", "$7.95"},
+					},
+				},
+				meal{
+					MealType: "Lunch",
+					Items: []item{
+						item{"Hot Dog", "$4.95"},
+						item{"Pizza", "$7.95"},
+					},
+				},
+				meal{
+					MealType: "Dinner",
+					Items: []item{
+						item{"Spaghetti", "$14.95"},
+						item{"Steak and Eggs", "$17.95"},
+					},
+				},
+			},
 		},
 	}
 
-	fmt.Println(n)
+	// restaurants := []restaurant{
+	// 	restaurant{
+	// 		ResName: "Beni Hana",
+	// 		Lunch: meal{
+	// 			MealType: "Lunch",
+	// 			Items: []item{
+	// 				item{"Egg Roll", "$4.95"},
+	// 				item{"Udon Noodles", "$7.95"},
+	// 			},
+	// 		},
+	// 		Dinner: meal{
+	// 			MealType: "Dinner",
+	// 			Items: []item{
+	// 				item{"Sushi", "$18.95"},
+	// 				item{"Edamame", "$12.95"},
+	// 			},
+	// 		},
+	// 	},
+	// 	restaurant{
+	// 		ResName: "International Pancake House",
+	// 		Breakfast: meal{
+	// 			MealType: "Breakfast",
+	// 			Items: []item{
+	// 				item{"Silver Dollar Pancakes", "$4.95"},
+	// 				item{"Wester Omelet", "$7.95"},
+	// 			},
+	// 		},
+	// 		Lunch: meal{
+	// 			MealType: "Lunch",
+	// 			Items: []item{
+	// 				item{"Hot Dog", "$4.95"},
+	// 				item{"Pizza", "$7.95"},
+	// 			},
+	// 		},
+	// 		Dinner: meal{
+	// 			MealType: "Dinner",
+	// 			Items: []item{
+	// 				item{"Spaghetti", "$14.95"},
+	// 				item{"Steak and Eggs", "$17.95"},
+	// 			},
+	// 		},
+	// 	},
+	// }
+
+	err := tpl.Execute(os.Stdout, restaurants)
+	if err != nil {
+		log.Fatalln(err)
+	}
+	// fmt.Println(restaurants)
+
 }
