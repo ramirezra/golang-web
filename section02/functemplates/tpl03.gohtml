@@ -6,15 +6,13 @@
 </head>
 <body>
 
-{{range .Wisdom}}
-{{uc .Name}}
-{{end}}
+{{.}}
 
+{{. | fdbl}}
 
-{{range .Wisdom}}
-{{ft .Name}}
-{{end}}
+{{. | fdbl | fsq}}
 
+{{. | fdbl | fsq | fsqrt}}
 
 </body>
 </html>
