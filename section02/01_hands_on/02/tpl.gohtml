@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Hands On - 02</title>
+  </head>
+  <body>
+    {{ range .}}
+      {{ .Name }}<br>
+      {{ .Address }}<br>
+      {{ .City }}  {{ .Zip }}
+    {{ end }}
+  </body>
+</html>
