@@ -30,7 +30,7 @@ type restaurants struct {
 var tpl *template.Template
 
 func init() {
-	tpl = template.Must(template.ParseFiles("tpl.gohtml"))
+	tpl = template.Must(template.ParseFiles("tpl2.gohtml"))
 }
 
 func main() {
@@ -82,50 +82,6 @@ func main() {
 			},
 		},
 	}
-
-	// restaurants := []restaurant{
-	// 	restaurant{
-	// 		ResName: "Beni Hana",
-	// 		Lunch: meal{
-	// 			MealType: "Lunch",
-	// 			Items: []item{
-	// 				item{"Egg Roll", "$4.95"},
-	// 				item{"Udon Noodles", "$7.95"},
-	// 			},
-	// 		},
-	// 		Dinner: meal{
-	// 			MealType: "Dinner",
-	// 			Items: []item{
-	// 				item{"Sushi", "$18.95"},
-	// 				item{"Edamame", "$12.95"},
-	// 			},
-	// 		},
-	// 	},
-	// 	restaurant{
-	// 		ResName: "International Pancake House",
-	// 		Breakfast: meal{
-	// 			MealType: "Breakfast",
-	// 			Items: []item{
-	// 				item{"Silver Dollar Pancakes", "$4.95"},
-	// 				item{"Wester Omelet", "$7.95"},
-	// 			},
-	// 		},
-	// 		Lunch: meal{
-	// 			MealType: "Lunch",
-	// 			Items: []item{
-	// 				item{"Hot Dog", "$4.95"},
-	// 				item{"Pizza", "$7.95"},
-	// 			},
-	// 		},
-	// 		Dinner: meal{
-	// 			MealType: "Dinner",
-	// 			Items: []item{
-	// 				item{"Spaghetti", "$14.95"},
-	// 				item{"Steak and Eggs", "$17.95"},
-	// 			},
-	// 		},
-	// 	},
-	// }
 
 	err := tpl.Execute(os.Stdout, restaurants)
 	if err != nil {

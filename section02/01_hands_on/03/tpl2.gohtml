@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title.MealTypeRestaurant Menu</title>
+  </head>
+  <body>
+    {{range .}}
+      {{ .ResName}}
+      {{range .Meal}}
+        {{ if eq .MealType "Lunch"}}
+
+        {{  .MealType }}
+        {{range .Items}}
+          {{ .ItemName }} - {{ .Price }}
+        {{end }}
+      {{end }}
+    {{end }}
+  {{end }}
+
+  </body>
+</html>
