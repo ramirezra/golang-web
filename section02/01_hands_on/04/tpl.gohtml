@@ -2,9 +2,26 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/main.css">
     <title>Parse CSV</title>
   </head>
   <body>
-    {{ . }}
-  </body>
+    <table>
+      <thead>
+        <th>Date</th>
+        <th>Open</th>
+        <th>High</th>
+        <th>Low</th>
+        <th>Close</th>
+        <th>Volume</th>  
+      </thead>
+      <tbody>
+        {{range . }}
+          <tr><td>{{.Date}} </td><td> {{.Open}} </td><td> {{.High}} </td><td> {{.Low}} </td><td> {{.Close}} </td><td> {{.Volume}}</td></tr>
+        {{end }}
+      </tbody>
+    </table>
+
+      </body>
 </html>

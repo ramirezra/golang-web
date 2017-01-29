@@ -21,29 +21,9 @@ type Post struct {
 	High     float64
 	Low      float64
 	Close    float64
-	Volume   float64
+	Volume   int64
 	AdjClose float64
 }
-
-//
-// func makeRecord(row []string) record {
-// 	open, _ := strconv.ParseFloat(row[1], 64)
-// 	high, _ := strconv.ParseFloat(row[2], 64)
-// 	low, _ := strconv.ParseFloat(row[3], 64)
-// 	close, _ := strconv.ParseFloat(row[4], 64)
-// 	volume, _ := strconv.ParseFloat(row[5], 64)
-// 	// adjusted, _ := strconv.ParseFloat(row[6], 64)
-//
-// 	return record{
-// 		Date:   row[0],
-// 		Open:   open,
-// 		High:   high,
-// 		Low:    low,
-// 		Close:  close,
-// 		Volume: volume,
-// 		// Adjusted: adjusted,
-// 	}
-// }
 
 func main() {
 	file, err := os.Open("table.csv")
@@ -66,18 +46,28 @@ func main() {
 
 	var posts []Post
 
-	for _, item := range record {
+	for i, item := range record {
 		open, _ := strconv.ParseFloat(item[1], 64)
-		// high, _ := strconv.ParseFloat(record[2], 64)
-		// low, _ := strconv.ParseFloat(record[3], 64)
-		// close, _ := strconv.ParseFloat(record[4], 64)
-		// volume, _ := strconv.ParseFloat(record[5], 64)
+		high, _ := strconv.ParseFloat(item[2], 64)
+		low, _ := strconv.ParseFloat(item[3], 64)
+		close, _ := strconv.ParseFloat(item[4], 64)
+		volume, _ := strconv.ParseInt(item[5], 0, 0)
 
-		post := Post{Date: item[0], Open: open}
+		if i == 0 {
+			continue
+		}
+
+		post := Post{Date: item[0], Open: open, High: high, Low: low, Close: close, Volume: volume}
 		posts = append(posts, post)
 	}
 
-	error := tpl.Execute(os.Stdout, posts)
+	newfile, err := os.Create("index.html")
+	if err != nil {
+		log.Println("error creating file", err)
+	}
+	defer newfile.Close()
+
+	error := tpl.Execute(newfile, posts)
 	if err != nil {
 		log.Fatalln(error)
 	}
