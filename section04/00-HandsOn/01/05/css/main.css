@@ -1,0 +1,59 @@
+body{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+table{
+  width: 60vw;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;
+  align-items: center;
+
+  border: 2px solid hotpink;
+}
+
+thead {
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: space-between;;
+  border: 10px solid purple;
+}
+
+th {
+  width: 10vw;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+}
+
+tbody{
+  width: 100%;
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  border: 2px solid green;
+}
+
+
+tr{
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: space-between;
+
+}
+
+
+tr:nth-child(2n+1){
+  background-color: lightgreen;
+}
+
+td{
+  width: 10vw;
+  display: flex;
+  justify-content: center;
+}
