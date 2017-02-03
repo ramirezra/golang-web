@@ -12,6 +12,7 @@ import (
 	"io"
 	"log"
 	"net"
+	"strings"
 )
 
 func main() {
@@ -35,28 +36,32 @@ func main() {
 func serve(connection net.Conn) {
 	defer connection.Close()
 
-	response(connection net.Conn)
+	response(connection)
 
-	response(connection net.Conn)
+	response(connection)
 }
 
-func request(connection net.Conn){
-
-
-}
-
-func response(connection net.Conn){
-
-}
+func request(connection net.Conn) {
+	i := 0
 	scanner := bufio.NewScanner(connection)
 	for scanner.Scan() {
 		ln := scanner.Text()
 		fmt.Println(ln)
+		if i == 0 {
+			m := strings.Fields(ln)[0]
+			u := strings.Fields(ln)[1]
+			fmt.Println(m)
+			fmt.Println(u)
+		}
 		if ln == "" {
 			fmt.Println("This is the end of the message.")
 			break
 		}
 	}
+
+}
+
+func response(connection net.Conn) {
 	fmt.Println("Code got here.")
 	body := "Check out the response body payload."
 	io.WriteString(connection, "HTTP/1.1 200 OK\r\n")
@@ -64,4 +69,5 @@ func response(connection net.Conn){
 	fmt.Fprint(connection, "Content-Type: text/plain\r\n")
 	io.WriteString(connection, "\r\n")
 	io.WriteString(connection, body)
+
 }
