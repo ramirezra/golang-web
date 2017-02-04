@@ -54,15 +54,12 @@ func serve(connection net.Conn) {
 		}
 		i++
 	}
-	body := "Check out the response body payload."
-	body += "\n"
-	body += method
-	body += "\n"
-	body += uri
+	body := `<html><head>
+	<meta charset="UTF-8"><title>Low Level!</title></head><body><h1>Holy Cow this is low level.</h1></body></html>`
 
 	io.WriteString(connection, "HTTP/1.1 200 OK\r\n")
 	fmt.Fprintf(connection, "Content-Length: %d\r\n", len(body))
-	fmt.Fprint(connection, "Content-Type: text/plain\r\n")
+	fmt.Fprint(connection, "Content-Type: text/html\r\n")
 	io.WriteString(connection, "\r\n")
 	io.WriteString(connection, body)
 
