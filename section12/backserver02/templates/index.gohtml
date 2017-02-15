@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Input Type Submit</title>
+  </head>
+  <body>
+
+    <header>
+      {{ if .Method}}<p>The request method: {{ .Method}}</p>{{end}}
+      {{ if .Host}}<p>The request host: {{ .Host}}</p>{{end}}
+      {{ if .ContentLength}}<p>The request ContentLength: {{ .ContentLength}}</p>{{end}}
+
+      {{ if .URL}}<p>The request URL:</p>
+
+      {{end}}
+
+
+
+
+    </header>
+    <h1>Welcome to CAM Server - 02</h1>
+  </body>
+</html>
