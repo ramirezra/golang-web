@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/satori/go.uuid"
 	"net/http"
 	"time"
+
+	"github.com/satori/go.uuid"
 )
 
 func getUser(w http.ResponseWriter, req *http.Request) user {
