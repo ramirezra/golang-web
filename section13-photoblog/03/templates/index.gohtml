@@ -9,9 +9,8 @@
     {{ range . }}
       <h2>{{ . }}</h2>
     {{ end }}
-    <form class="" action="/" method="post">
-      <label for="filename"></label>
-      <input type="text" name="filename" value="Insert File Name">
+    <form class="" action="/" method="post" enctype="multipart/form-data">
+      <input type="file" name="filename">
       <input type="submit" name="post" value="Upload File">
     </form>
   </body>
