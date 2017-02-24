@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/ramirezra/golang-web/section15/01/controllers"
-	"github.com/ramirezra/golang-web/section15/01/models"
+	"github.com/ramirezra/golang-web/section15/02/controllers"
+	"github.com/ramirezra/golang-web/section15/02/models"
 )
 
 func main() {
@@ -19,5 +19,5 @@ func main() {
 }
 
 func getSession() map[string]models.User {
-	return make(map[string]models.User)
+	return models.LoadUsers()
 }

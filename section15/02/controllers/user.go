@@ -6,22 +6,12 @@ import (
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/ramirezra/golang-web/section15/01/models"
+	"github.com/ramirezra/golang-web/section15/02/models"
 	uuid "github.com/satori/go.uuid"
 )
 
-// UserController exported
-type UserController struct {
-	session map[string]models.User
-}
-
-// NewUserController exported
-func NewUserController(m map[string]models.User) *UserController {
-	return &UserController{m}
-}
-
 // GetUser exported
-func (uc UserController) GetUser(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+func (c Controller) GetUser(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
 	// Grab id
 	id := p.ByName("id")
 
@@ -50,6 +40,7 @@ func (uc UserController) CreateUser(w http.ResponseWriter, r *http.Request, _ ht
 
 	// store the user
 	uc.session[u.Id] = u
+	models.StoreUsers(uc.session)
 	uj, err := json.Marshal(u)
 	if err != nil {
 		fmt.Println(err)
@@ -66,6 +57,7 @@ func (uc UserController) DeleteUser(w http.ResponseWriter, r *http.Request, p ht
 
 	// Delete user
 	delete(uc.session, id)
+	models.StoreUsers(uc.session)
 	w.WriteHeader(http.StatusOK) // 200
 	fmt.Fprint(w, "Deleted user", id, "\n")
 }
