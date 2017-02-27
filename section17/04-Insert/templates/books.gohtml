@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Books</title>
+  </head>
+  <body>
+    {{ range .}}
+    <p><a href="/books/show?isbn={{.Isbn}}">{{.Isbn}}</a></p>
+    {{ end}}
+
+    <p><a href="/books/create">Insert A Book</a></p>
+  </body>
+</html>
