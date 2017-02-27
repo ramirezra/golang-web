@@ -16,18 +16,19 @@ var tpl *template.Template
 func init() {
 	var err error
 	db, err = sql.Open("postgres", "postgres://bond:password@localhost/bookstore?sslmode=disable")
-
 	if err != nil {
 		panic(err)
 	}
 	if err = db.Ping(); err != nil {
 		panic(err)
 	}
-	fmt.Println("You connected to your database")
+	fmt.Println("You connected to your database.")
+
 	tpl = template.Must(template.ParseGlob("templates/*.gohtml"))
+
 }
 
-// Book exported - upper case field names.
+// Book exported
 type Book struct {
 	Isbn   string
 	Title  string
@@ -41,8 +42,9 @@ func main() {
 	http.HandleFunc("/books/show", booksShow)
 	http.HandleFunc("/books/create", booksCreateForm)
 	http.HandleFunc("/books/create/process", booksCreateProcess)
-	http.HandleFunc("/books/update", booksUpdate)
+	http.HandleFunc("/books/update", booksUpdateForm)
 	http.HandleFunc("/books/update/process", booksUpdateProcess)
+	http.HandleFunc("/books/delete/process", booksDeleteProcess)
 	http.ListenAndServe(":8080", nil)
 }
 
@@ -56,7 +58,7 @@ func booksIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	rows, err := db.Query("SELECT * FROM books;")
+	rows, err := db.Query("SELECT * FROM books")
 	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 		return
@@ -77,7 +79,6 @@ func booksIndex(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(500), 500)
 		return
 	}
-
 	tpl.ExecuteTemplate(w, "books.gohtml", bks)
 }
 
@@ -86,12 +87,14 @@ func booksShow(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
 		return
 	}
+
 	isbn := r.FormValue("isbn")
 	if isbn == "" {
-		http.Error(w, http.StatusText(404), http.StatusBadRequest)
+		http.Error(w, http.StatusText(400), http.StatusBadRequest)
 		return
 	}
-	row := db.QueryRow("SELECT * FROM books WHERE Isbn = $1", isbn)
+
+	row := db.QueryRow("SELECT * FROM books WHERE isbn = $1", isbn)
 
 	bk := Book{}
 	err := row.Scan(&bk.Isbn, &bk.Title, &bk.Author, &bk.Price)
@@ -101,9 +104,8 @@ func booksShow(w http.ResponseWriter, r *http.Request) {
 		return
 	case err != nil:
 		http.Error(w, http.StatusText(500), http.StatusInternalServerError)
-		return
 	}
-	fmt.Fprintf(w, "%s, %s, %s, $%.2f\n", bk.Isbn, bk.Title, bk.Author, bk.Price)
+	tpl.ExecuteTemplate(w, "show.gohtml", bk)
 }
 
 func booksCreateForm(w http.ResponseWriter, r *http.Request) {
@@ -126,25 +128,29 @@ func booksCreateProcess(w http.ResponseWriter, r *http.Request) {
 	// validate form values
 	if bk.Isbn == "" || bk.Title == "" || bk.Author == "" || p == "" {
 		http.Error(w, http.StatusText(400), http.StatusBadRequest)
+		return
 	}
-	// Convert price to float32
+
+	// convert form values
 	float, err := strconv.ParseFloat(p, 32)
 	if err != nil {
-		http.Error(w, http.StatusText(406)+"Please go back and enter a valid price.", http.StatusNotAcceptable)
+		http.Error(w, http.StatusText(406), http.StatusNotAcceptable)
+		return
 	}
 	bk.Price = float32(float)
 
-	// insert values into database
-	_, err = db.Exec("INSERT INTO books (isbn, title, author, price) VALUES ($1, $2, $3, $4)", bk.Isbn, bk.Title, bk.Author, bk.Price)
+	// insert values
+	_, err = db.Exec("INSERT INTO books (isbn,title,author,price) VALUE ($1,$2,$3,$4)", bk.Isbn, bk.Title, bk.Author, bk.Price)
 	if err != nil {
 		http.Error(w, http.StatusText(500), http.StatusInternalServerError)
 		return
 	}
-	//confirm insertion
+
+	// confirm insertion
 	tpl.ExecuteTemplate(w, "created.gohtml", bk)
 }
 
-func booksUpdate(w http.ResponseWriter, r *http.Request) {
+func booksUpdateForm(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
 		return
@@ -157,6 +163,7 @@ func booksUpdate(w http.ResponseWriter, r *http.Request) {
 	}
 
 	row := db.QueryRow("SELECT * FROM books WHERE isbn = $1", isbn)
+
 	bk := Book{}
 	err := row.Scan(&bk.Isbn, &bk.Title, &bk.Author, &bk.Price)
 	switch {
@@ -165,7 +172,6 @@ func booksUpdate(w http.ResponseWriter, r *http.Request) {
 		return
 	case err != nil:
 		http.Error(w, http.StatusText(500), http.StatusInternalServerError)
-		return
 	}
 	tpl.ExecuteTemplate(w, "update.gohtml", bk)
 }
@@ -189,22 +195,44 @@ func booksUpdateProcess(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// conver form values
+	// convert form values
 	float, err := strconv.ParseFloat(p, 32)
 	if err != nil {
-		http.Error(w, http.StatusText(406)+"Please enter a valid price.", http.StatusNotAcceptable)
+		http.Error(w, http.StatusText(406), http.StatusNotAcceptable)
 		return
 	}
 	bk.Price = float32(float)
 
-	// update values
-	_, err = db.Exec("UPDATE books SET isbn=$1, title=$2, author=$3, price=$4 WHERE isbn=$1;", bk.Isbn, bk.Title, bk.Author, bk.Price)
-
+	// insert values
+	_, err = db.Exec("UPDATE books SET isbn=$1, title=$2, author=$3, price=$4 WHERE isbn=$1", bk.Isbn, bk.Title, bk.Author, bk.Price)
 	if err != nil {
 		http.Error(w, http.StatusText(500), http.StatusInternalServerError)
 		return
 	}
 
-	// confirm update
+	// confirm insertion
 	tpl.ExecuteTemplate(w, "updated.gohtml", bk)
+
+}
+
+func booksDeleteProcess(w http.ResponseWriter, r *http.Request) {
+	if r.Method != "GET" {
+		http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
+		return
+	}
+	isbn := r.FormValue("isbn")
+	if isbn == "" {
+		http.Error(w, http.StatusText(400), http.StatusBadRequest)
+		return
+	}
+
+	// delete bookstore
+	_, err := db.Exec("DELETE FROM books WHERE isbn=$1;", isbn)
+	if err != nil {
+		http.Error(w, http.StatusText(500), http.StatusInternalServerError)
+		return
+	}
+
+	http.Redirect(w, r, "/books", http.StatusSeeOther)
+
 }
