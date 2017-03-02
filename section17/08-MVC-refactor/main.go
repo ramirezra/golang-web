@@ -3,7 +3,8 @@ package main
 import (
 	"net/http"
 
-	"github.com/ramirezra/golang-web/section18/01-MVCwMongo/books"
+	_ "github.com/lib/pq"
+	"github.com/ramirezra/golang-web/section17/07-MVC/books"
 )
 
 func main() {

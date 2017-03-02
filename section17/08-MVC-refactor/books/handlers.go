@@ -5,36 +5,18 @@ import (
 	"net/http"
 	"strconv"
 
-	"gopkg.in/mgo.v2/bson"
-
-	"github.com/ramirezra/golang-web/section18/01-MVCwMongo/config"
+	"github.com/ramirezra/golang-web/section17/07-MVC/config"
 )
 
 // Index exported
 func Index(w http.ResponseWriter, r *http.Request) {
-	http.Redirect(w, r, "/books", http.StatusSeeOther)
-}
-
-// BooksIndex exported
-func BooksIndex(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
 		return
 	}
 
-	bks := make([]Book, 0)
-	result := config.Books.Find(bson.M{}).All(&bks)
-
-	for rows.Next() {
-		bk := Book{}
-		err := rows.Scan(&bk.Isbn, &bk.Title, &bk.Author, &bk.Price)
-		if err != nil {
-			http.Error(w, http.StatusText(500), 500)
-			return
-		}
-		bks = append(bks, bk)
-	}
-	if err = rows.Err(); err != nil {
+	bks, err := AllBooks()
+	if err != nil {
 		http.Error(w, http.StatusText(500), 500)
 		return
 	}
@@ -42,7 +24,7 @@ func BooksIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 // BooksShow exported
-func BooksShow(w http.ResponseWriter, r *http.Request) {
+func Show(w http.ResponseWriter, r *http.Request) {
 	if r.Method != "GET" {
 		http.Error(w, http.StatusText(405), http.StatusMethodNotAllowed)
 		return
