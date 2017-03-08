@@ -9,13 +9,11 @@ import (
 // DB exported
 var DB *mgo.Database
 
-// Books collection exported
+// Books exported
 var Books *mgo.Collection
 
 func init() {
-	// var err error
-	// DB, err = sql.Open("postgres", "postgres://bond:password@localhost/bookstore?sslmode=disable")
-	s, err := mgo.Dial("mongodb://bond:moneypenny007@localhost/bookstore")
+	s, err := mgo.Dial("mongodb://localhost/bookstore")
 	if err != nil {
 		panic(err)
 	}

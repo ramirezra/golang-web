@@ -8,12 +8,11 @@ import (
 
 func main() {
 	http.HandleFunc("/", books.Index)
-	http.HandleFunc("/books", books.BooksIndex)
-	http.HandleFunc("/books/show", books.BooksShow)
-	http.HandleFunc("/books/create", books.BooksCreateForm)
-	http.HandleFunc("/books/create/process", books.BooksCreateProcess)
-	http.HandleFunc("/books/update", books.BooksUpdateForm)
-	http.HandleFunc("/books/update/process", books.BooksUpdateProcess)
-	http.HandleFunc("/books/delete/process", books.BooksDeleteProcess)
+	http.HandleFunc("/books/show", books.Show)
+	http.HandleFunc("/books/create", books.CreateForm)
+	http.HandleFunc("/books/create/process", books.CreateProcess)
+	http.HandleFunc("/books/update", books.UpdateForm)
+	http.HandleFunc("/books/update/process", books.UpdateProcess)
+	http.HandleFunc("/books/delete/process", books.DeleteProcess)
 	http.ListenAndServe(":8080", nil)
 }
